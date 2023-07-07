@@ -1,0 +1,208 @@
+<!-- base template for creating all our to do list -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="box" id="heading">
+  
+<h1><%=kindofday%></h1>%>
+  <!-- <h1><%=listTitle%></h1> -->
+</div>
+
+  
+
+
+    
+    <!-- <li><%= newListItems%></li> this adds items one after the other as an array but we need to update it to different of list item -->
+    <!-- for loop will be needed -->
+    <div class="box">
+    <%for(var i=0;i<newListItems.length;i++){%>
+        <div class="item">
+            <input type="checkbox" >
+        <p><%=newListItems[i]%></p>
+
+    
+        </div>
+    <%}%>
+    <form class="item" method="post" action="/">
+    <input type="text" name="newItem" placeholder="NewItem" autocomplete="off">
+    <button type="submit" name="button">+</button>
+</form>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+<!-- <% if(kindofday==="Saturday"||kindofday==="Sunday"){%>
+    <h1 style="color:purple"><%= kindofday %> ToDo-list</h1>    we have added a variable using ejs that chosses its value using the logic that was created in our server -->
+<!-- <%} else { %>
+    <h1 style="color:blue"><%= kindofday %> ToDo-list</h1> 
+<% } %> --> 
+
+
+
+
+
+<!--how can we bring logic to html as its js-->
+<!-- we use scriplet tag allows you to use control flow so as to render a different html depending on what was the value of the variable that you got passed into the template  -->
+<!-- we need to add this scriplet to every bit of code that is javascript -->
+
+
+</body>
+</html>
+
+
+
+
+
+javascript code
+const express = require("express");
+const bodyParser=require("body-parser")
+const app=express()
+
+
+app.use(bodyParser.urlencoded({extended:true}));
+
+
+app.set('view engine', 'ejs'); // tells app to use ejs and view engine will go to look for the file you want to render
+app.use(express.static("public"))
+
+let workItems=[];
+
+var items=[]
+
+app.get("/",function(req,res){
+    var today=new Date() ; //create a new date object
+    // var day=""
+    
+    
+
+    // if(today.getDay()===6 || today.getDay()===2){  //getDay give you the number of the day of week
+    //     day="weekend"
+
+    //     // res.send("<h1>Yay its a holiday</h1>")
+    //     // res.sendFile(__dirname+"weekend.html")
+    // }
+    // else{
+    //     day="weekday"
+    //     // res.sendFile(__dirname+"weekday.html")
+        
+
+    //     // if res.write is problem for writing it again and again so you can res.send(__dirname+"filename") where in html you can write every thing without res.write
+     
+
+    // }
+    // res.render("list",{kindofday: day}) 
+
+
+    // method to get day of the week
+    // var day="";
+    // var currentDay= today.getDay();
+
+    // switch(currentDay){
+    //     case 0:
+    //         day="Sunday";
+    //         break;
+    //     case 1:
+    //         day="Monday";
+    //         break;
+    //     case 2:
+    //         day="Tuesday";
+    //         break;
+    //     case 3:
+    //         day="Wednesday";
+    //         break;
+    //     case 4:
+    //         day="Thursday";
+    //         break;
+    //     case 5:
+    //         day="Friday";
+    //         break;
+    //     case 6:
+    //         day="Saturday";
+    //         break;
+    //     default:
+    //         console.log("Error: current day is equal to: "+currentDay)
+    // }
+
+
+
+    // short method to get the day of the week
+    var options={
+        weekday:"long",
+        day:"numeric",
+        month:"long"
+    }
+    var day=today.toLocaleDateString('en-US',options); // Get the full weekday name
+    res.render("list",{kindofday: day,newListItems: items}) //this will again give error as item is defined in app.post only so scope comes to picture
+
+
+
+    // <!-- we need to create to html template where we can change parts of html depending on the logic in our server
+    // It is useful when we are creating a website which has very similar content to each other -->
+    // Here it is needed as if for each day we need a today list then there will be 7 conditional statement 
+    // ejs comes to into play
+
+
+
+    
+    // res.send("Hello");  //response to the browser
+})
+
+
+
+
+
+
+
+
+
+// when the post request recieved it gets caught in the below section and we tap into the request section looking through the body of the post request 
+// and we search for value for something called newitem which matches with the name of the input
+
+app.post("/",function(req,res){
+    
+    var item=req.body.newItem
+    // console.log(item)
+    //this code allows to enter one item and other gets overwritten over it
+    // to solve this
+    
+
+    
+    items.push(item)  // array logic
+    // res.render("list",{newListItem: item}) // this will give error as one render is allowed per response
+    res.redirect("/")
+
+    // now we need to pass this data back to the browser
+})
+
+
+
+
+
+
+
+
+
+
+app.listen(3000,function(){
+    console.log("server is running on the port 3000")
+})
+
+
+// var except in function is a global variable even though declared inside curly braces whereas let and const remain local variable

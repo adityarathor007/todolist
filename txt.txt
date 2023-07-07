@@ -1,0 +1,28 @@
+app.get('/:customListName',function(req,res){
+    var requestedTitle = req.params.customListName;
+
+    // Exclude 'favicon.ico' request
+  
+
+    List.findOne({name:requestedTitle})
+    .then(function(foundList){
+        if(!foundList){
+            // console.log("Doesn't exist")
+            const list= new List({
+                name:requestedTitle,
+                items:defaultItems
+            })
+
+                list.save();
+            
+            res.redirect("/"+requestedTitle);
+            }
+        else
+
+        res.render("list",{listTitle:foundList.name,newListItems: foundList.items})
+        // console.log("Exist");
+    })
+})
+
+
+

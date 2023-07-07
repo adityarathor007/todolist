@@ -1,0 +1,54 @@
+<!-- base template for creating all our to do list -->
+<%- include("header")-%>
+
+<div class="box" id="heading">
+  <h1><%=listTitle%></h1>
+</div>
+
+  
+
+
+    
+    <!-- <li><%= newListItems%></li> this adds items one after the other as an array but we need to update it to different of list item -->
+    <!-- for loop will be needed -->
+    <div class="box">
+    <% newListItems.forEach(function(item){ %>
+        <form action="/delete" method="post">
+        <div class="item">
+        <input type="checkbox" name="checkbox" value="<%=item._id%>" onChange="this.form.submit()">
+        <p><%=item.name%></p>
+        </div>
+        <input type="hidden" name="listTitle" value="<%=listTitle%>"></input>
+        </form>
+        <%})%>
+
+    
+        
+  
+    <form class="item" method="post" action="/">
+    <input type="text" name="newItem" placeholder="NewItem" autocomplete="off">
+    <button type="submit" name="list" value="<%= listTitle%>">+</button> <!--created a dynamic button-->
+</form>
+
+
+    </div>
+    <%- include("footer")-%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--how can we bring logic to html as its js-->
+<!-- we use scriplet tag allows you to use control flow so as to render a different html depending on what was the value of the variable that you got passed into the template  -->
+<!-- we need to add this scriplet to every bit of code that is javascript -->
+
+
+
